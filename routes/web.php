@@ -1,36 +1,33 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Middleware\TokenVerificationMiddleware;
 use App\Http\Middleware\TokenVerificationPassMiddleware;
 
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/userLogin',[UserController::class,'LoginPage']);
-Route::get('/userRegistration',[UserController::class,'RegistrationPage']);
-Route::get('/sendOtp',[UserController::class,'SendOtpPage']);
-Route::get('/verifyOtp',[UserController::class,'VerifyOTPPage']);
-Route::get('/resetPassword',[UserController::class,'ResetPasswordPage'])->middleware(middleware: [TokenVerificationPassMiddleware::class]);
 
 
-Route::post('/user-registration', [UserController::class, 'UserRegistration']);
-Route::post('/user-login', [UserController::class, 'UserLogin']);
-Route::post('/send-otp', [UserController::class, 'SendOTPCode']);
-Route::post('/verify-otp', [UserController::class, "VerifyOTP"]);
-Route::post('/reset-password', [UserController::class, 'ResetPass'])->middleware([TokenVerificationPassMiddleware::class]);
-Route::get('/logout', [UserController::class, 'UserLogout'])->middleware([TokenVerificationMiddleware::class]);
+
+
+
+Route::get('/sign-up', [AuthController::class, 'signUpPage']);
+Route::get('/userLogin', [AuthController::class, 'LoginPage']);
+Route::get('/sendOtp', [AuthController::class, 'SendOtpPage']);
+Route::get('/verifyOtp', [AuthController::class, 'VerifyOTPPage']);
+Route::get('/resetPassword', [AuthController::class, 'ResetPasswordPage'])->middleware(middleware: [TokenVerificationPassMiddleware::class]);
+
+
+
+
+
+Route::post('/sign-up', [AuthController::class, 'signUp']);
+Route::post('/sign-in', [AuthController::class, 'signIn']);
+Route::post('/otp-send', [AuthController::class, 'otpSend']);
+Route::post('/otp-verify', [AuthController::class, "otpVerify"]);
+Route::post('/password-reset', [AuthController::class, 'passwordReset'])->middleware([TokenVerificationPassMiddleware::class]);
+Route::get('/sign-out', [AuthController::class, 'signOut'])->middleware([TokenVerificationMiddleware::class]);

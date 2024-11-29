@@ -1,26 +1,34 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use Exception;
 use App\Models\User;
 use App\Mail\OTPMail;
 use App\Helper\JWTToken;
 use Illuminate\Http\Request;
-
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Controller;
 
-class UserController extends Controller
+class AuthController extends Controller
 {
+
+
+
+
+    function signUpPage(): View
+    {
+        return view('auth.sign-up');
+    }
+
+
+
+
 
     function LoginPage(): View
     {
         return view('pages.auth.login-page');
-    }
-    function RegistrationPage(): View
-    {
-        return view('pages.auth.registration-page');
     }
     function SendOtpPage(): View
     {
@@ -35,32 +43,38 @@ class UserController extends Controller
         return view('pages.auth.reset-pass-page');
     }
 
-    public function UserRegistration(Request $request)
+
+
+
+    public function signUp(Request $request)
     {
         try {
 
-            User::create([
+            $data = User::create([
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
                 'password' => $request->input('password'),
+                'gender' => $request->input('gender'),
                 'height' => $request->input('height'),
                 'weight' => $request->input('weight'),
-                'sex' => $request->input('sex'),
             ]);
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'User Registration Successfully'
+                'data' => $data,
+                'message' => 'User Registration Successfully.'
             ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'failed',
-                'message' => 'User Registration failed'
+                'message' => 'User Registration Failed.',
+                'error' => $e->getMessage()
             ], 200);
         }
     }
 
-    function UserLogin(Request $request)
+    function signIn(Request $request)
     {
         $count = User::where('email', '=', $request->input('email'))
             ->where('password', '=', $request->input('password'))->first();
@@ -81,7 +95,7 @@ class UserController extends Controller
         }
     }
 
-    function SendOTPCode(Request $request)
+    function otpSend(Request $request)
     {
         $email = $request->input('email');
         $otp = rand(1000, 9999);
@@ -105,7 +119,7 @@ class UserController extends Controller
         }
     }
 
-    function VerifyOTP(Request $request)
+    function otpVerify(Request $request)
     {
         $email = $request->input('email');
         $otp = $request->input('otp');
@@ -129,7 +143,7 @@ class UserController extends Controller
         }
     }
 
-    function ResetPass(Request $request)
+    function passwordReset(Request $request)
     {
 
         try {
@@ -149,9 +163,7 @@ class UserController extends Controller
         }
     }
 
-
-
-    function UserLogout()
+    function signOut()
     {
         session()->flush();
         return redirect('/userLogin')->cookie('token', '', -1);
