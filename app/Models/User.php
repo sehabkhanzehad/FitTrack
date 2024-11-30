@@ -7,38 +7,43 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+class User extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name', 'email', 'password', 'height', 'weight', 'gender', 'role', 'otp'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    public function goals()
+    {
+        return $this->hasMany(Goal::class);
+    }
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function dietPlans()
+    {
+        return $this->hasMany(DietPlan::class);
+    }
+
+    public function workouts()
+    {
+        return $this->hasMany(Workout::class);
+    }
+
+    public function userWorkoutProgresses()
+    {
+        return $this->hasMany(UserWorkoutProgress::class);
+    }
+
+    public function userDietProgresses()
+    {
+        return $this->hasMany(UserDietProgress::class);
+    }
+
+    public function userActivities()
+    {
+        return $this->hasMany(UserActivity::class);
+    }
 }
