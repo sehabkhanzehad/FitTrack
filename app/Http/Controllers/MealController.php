@@ -12,7 +12,9 @@ class MealController extends Controller
      */
     public function index()
     {
-        //
+        $meallist = Meal::get();
+
+        return response()->json(['msg'=>"Success",'data'=>$meallist],200);
     }
 
     /**

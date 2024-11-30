@@ -12,7 +12,9 @@ class DietPlanController extends Controller
      */
     public function index()
     {
-        //
+        $dietplan = DietPlan::with('food','meal')->get();
+
+        return response()->json(['msg'=>'Success','data'=>$dietplan],200);
     }
 
     /**

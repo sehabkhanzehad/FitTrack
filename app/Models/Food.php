@@ -14,4 +14,8 @@ class Food extends Model
     protected $fillable = [
         'food_name','created_by','updated_by'
     ];
+
+    public function diet_plan(){
+        return $this->hasMany(DietPlan::class);
+    }
 }

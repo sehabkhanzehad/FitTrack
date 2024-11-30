@@ -21,5 +21,10 @@ Route::get('/', function () {
 });
 
 Route::post('/storefood',[FoodController::class,'store']);
+Route::get('/foodlist',[FoodController::class,'index']);
+
 Route::post('/storemeal',[MealController::class,'store']);
+Route::get('/meallist',[MealController::class,'index']);
+
 Route::post('/storedietplan',[DietPlanController::class,'store']);
+Route::get('/dietplanlist',[DietPlanController::class,'index']);

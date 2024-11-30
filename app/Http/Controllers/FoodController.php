@@ -12,7 +12,9 @@ class FoodController extends Controller
      */
     public function index()
     {
-        //
+        $foodlist = Food::get();
+
+        return response()->json(['msg'=>"Success",'data'=>$foodlist],200);
     }
 
     /**
