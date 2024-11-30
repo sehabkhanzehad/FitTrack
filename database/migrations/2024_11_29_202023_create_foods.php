@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('foods', function (Blueprint $table) {
             $table->id();
             $table->string('food_name');
-            $table->string('created_by');
+            $table->string('created_by')->nullable();
             $table->timestamp('created_at')->useCurrent();
-            $table->string('updated_by');
+            $table->string('updated_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }

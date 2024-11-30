@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\DietPlanController;
+use App\Http\Controllers\FoodController;
+use App\Http\Controllers\MealController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('/storefood',[FoodController::class,'store']);
+Route::post('/storemeal',[MealController::class,'store']);
+Route::post('/storedietplan',[DietPlanController::class,'store']);

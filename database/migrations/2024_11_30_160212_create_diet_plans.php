@@ -16,10 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('food_id');
             $table->unsignedBigInteger('meal_id');
             $table->time('priority');
+            $table->string('calories')->nullable();
             $table->string('carb_qty');
-            $table->string('created_by');
+            $table->string('created_by')->nullable();
             $table->timestamp('created_at')->useCurrent();
-            $table->string('updated_by');
+            $table->string('updated_by')->nullable();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
 
             $table->foreign('food_id')->references('id')->on('foods')->cascadeOnUpdate()->restrictOnDelete();
