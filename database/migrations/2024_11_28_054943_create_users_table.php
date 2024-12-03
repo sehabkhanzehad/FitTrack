@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,15 +14,16 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("email")->unique();
+            $table->string("phone")->unique();
             $table->string("password");
+            $table->enum('gender', ['male', 'female', 'other']);
+            $table->date("dob");
             $table->float('height')->nullable(); // Height in centimeters
             $table->float('weight')->nullable(); // Weight in kilograms
-            $table->enum('sex', ['male', 'female', 'other'])->nullable(); 
-            $table->string('otp',10);
-            $table->string("role")->default("user");
+            $table->string('otp', 10)->nullable();
+            $table->enum("role", ["admin", "user"])->default("user");
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-
         });
     }
 

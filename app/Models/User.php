@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class User extends Model
 {
+
     use HasFactory;
-    protected $fillable=["name","email","password","height","weight","sex","otp","role"];
-    protected $attributes = [
-        'otp' => '0'
-    ];
+
+    protected $guarded = ["id"];
+
+
+
+    // protected $attributes = [
+    //     'otp' => '0'
+    // ];
 
 }

@@ -9,24 +9,23 @@ use App\Helper\JWTToken;
 
 class TokenVerificationPassMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
-        $token = $request->cookie('token1');
-        $result = JWTToken::VerifyToken($token);
-        if ($result == 'unauthorized') {
-            return redirect('/userLogin');
+        $token = $request->cookie('passwordResetToken');
+        if ($token == null) {
+            return redirect()->route('auth.sign-in-page');
         }
-        else
-        {
-            $request->headers->set('email',$result->userEmail);
-            $request->headers->set('id',$result->userID);
+        $result = JWTToken::decodeToken($token);
+        if ($result == 'unauthorized') {
+            return redirect()->route('auth.sign-in-page');
+        } else {
+            // \Log::info('Decoded Token:', (array) $result);
+
+            $request->headers->set('email', $result->email);
+
+            // $request->attributes->set('email', $result->email);
+            // $request->attributes->set('id', $result->id);
             return $next($request);
         }
-
     }
 }
