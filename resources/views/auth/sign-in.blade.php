@@ -95,9 +95,12 @@
                 if (response.data.status == "success") {
                     successToast(response.data.message);
                     setTimeout(() => {
-                        // window.location.href = response.data.url;
-                        // reload page
-                        location.reload();
+                        if(response.data.role === "admin"){
+                            window.location.href = response.data.urlForAdmin;
+                        }
+                        if(response.data.role === "user"){
+                            window.location.href = response.data.urlForUser;
+                        }
                     }, 1000);
                 } else {
                     errorToast(response.data.message);

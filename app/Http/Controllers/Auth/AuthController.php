@@ -85,7 +85,7 @@ class AuthController extends Controller
             if ($user && Hash::check($request->input('password'), $user->password)) {
 
                 // Generate token
-                $token = JWTToken::generateToken("User Login Token", $user->email, $user->id, 60 * 60 * 24 * 30); // Store token for 30 days
+                $token = JWTToken::generateToken("userSignInToken", $user->email, $user->id, 60 * 60 * 24 * 30); // Store token for 30 days
                 // Store user id in session
                 session(['user_id' => $user->id]);
 
@@ -93,7 +93,9 @@ class AuthController extends Controller
                     'status' => 'success',
                     'message' => 'User login success.',
                     'role' => $user->role,
-                    'data' => $user
+                    'data' => $user,
+                    'urlForAdmin' => route('admin.dashboard'),
+                    'urlForUser' => route('user.dashboard'),
                 ], 200)->cookie('signInToken', $token, 60 * 24 * 30); // Store token for 30 days
             } else {
                 return response()->json([
@@ -130,7 +132,7 @@ class AuthController extends Controller
                     'status' => 'success',
                     'url' => route('auth.otp-verify-page'),
                     'message' => "Check your email for code."
-                ], 200)->header('emailForForgot', $email)->cookie('emailForForgot', $email, 5); // Store cookie for 5 minutes
+                ], 200)->cookie('emailForForgot', $email, 10); // Store cookie for 5 minutes
             } else {
                 return response()->json([
                     'status' => 'failed',
@@ -150,11 +152,9 @@ class AuthController extends Controller
     function otpVerify(Request $request)
     {
         try {
-            // get email from header or cookie
-            $email = $request->header('emailForForgot');
-            if (!$email) {
-                $email = $request->cookie('emailForForgot');
-            }
+
+            $email = $request->cookie('emailForForgot');
+
             $otp = $request->input('otp');
 
 
@@ -194,7 +194,7 @@ class AuthController extends Controller
 
             // \Log::info('Request Headers:', $request->headers->all());
 
-            $email = $request->header("email");
+            $email = $request->cookie('emailForForgot');
             // if (!$email) {
             //     $email = $request->cookie('emailForReset');
             // }
@@ -203,6 +203,7 @@ class AuthController extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Email not found.',
+                    'url' => route('auth.sign-in-page'),
                 ]);
             }
 
@@ -221,10 +222,10 @@ class AuthController extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'User not found.'
+                    'message' => 'User not found.',
+                    'url' => route('auth.sign-in-page'),
                 ], 200);
             }
-
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'failed',
@@ -237,7 +238,8 @@ class AuthController extends Controller
 
     function signOut()
     {
-        session()->flush();
-        return redirect('/userLogin')->cookie('token', '', -1);
+       // delete sign in token and session
+        session()->forget('user_id');
+        return redirect()->route('auth.sign-in-page')->withCookie(cookie()->forget('signInToken'));
     }
 }

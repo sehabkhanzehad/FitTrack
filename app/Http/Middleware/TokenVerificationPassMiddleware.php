@@ -19,13 +19,28 @@ class TokenVerificationPassMiddleware
         if ($result == 'unauthorized') {
             return redirect()->route('auth.sign-in-page');
         } else {
+
+            $respons = $next($request);
+
+            $respons->headers->set('email', $result->email);
+            $respons->headers->set('id', $result->id);
+            return $respons;
+
+
+
+
+
+
+
+
+
             // \Log::info('Decoded Token:', (array) $result);
 
-            $request->headers->set('email', $result->email);
+            // $request->headers->set('email', $result->email);
 
             // $request->attributes->set('email', $result->email);
             // $request->attributes->set('id', $result->id);
-            return $next($request);
+            // return $next($request);
         }
     }
 }

@@ -85,14 +85,14 @@
 
                 if (response.data.status == 'success') {
                     successToast(response.data.message);
-                    // setTimeout(() => {
-                    //     window.location.href = response.data.url;
-                    // }, 1000);
+                    setTimeout(() => {
+                        window.location.href = response.data.url;
+                    }, 1000);
                 } else {
                     errorToast(response.data.message);
-                    // setTimeout(() => {
-                    //     window.location.href = response.data.url;
-                    // }, 1000);
+                    setTimeout(() => {
+                        window.location.href = response.data.url;
+                    }, 1000);
                 }
             }
 
